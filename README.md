@@ -1,2 +1,4 @@
 # Website2test
-Website
+My Simple Static Website 2
+
+The address is: [https://cognijo.ir]
