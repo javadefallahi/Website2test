@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formiga — Formulation Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:   #1B3A6B;
+  --navy-d: #112550;
+  --navy-l: #2A4F8A;
+  --orange: #E87722;
+  --orange-l: #F59340;
+  --orange-d: #C45F0A;
+  --cream:  #F7F5F0;
+  --white:  #FFFFFF;
+  --charcoal: #1A1A2E;
+  --steel:  #8A9BB0;
+  --steel-l: #C5D0DE;
+  --steel-ll: #EEF2F7;
+  --text:   #2D3748;
+  --text-l: #5A6A80;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+.serif { font-family: 'DM Serif Display', Georgia, serif; }
+.mono  { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%;
+  height: 72px;
+  background: rgba(17, 37, 80, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  transition: box-shadow 0.3s;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo-mark {
+  width: 36px; height: 36px;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-mark svg { width: 20px; height: 20px; }
+.nav-logo-text {
+  font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--white);
+}
+.nav-logo-text span { color: var(--orange); }
+.nav-links {
+  display: flex; gap: 2rem; list-style: none;
+}
+.nav-links a {
+  color: var(--steel-l); font-size: 0.875rem; font-weight: 500;
+  letter-spacing: 0.02em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--orange);
+  color: var(--white) !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.nav-cta:hover { background: var(--orange-l) !important; transform: translateY(-1px); }
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  background: var(--navy-d);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 72px 5% 0;
+  position: relative;
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(232,119,34,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 30%, rgba(42,79,138,0.4) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; padding-right: 3rem; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(232,119,34,0.12);
+  border: 1px solid rgba(232,119,34,0.3);
+  color: var(--orange-l);
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  margin-bottom: 2rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--orange);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+.hero-headline {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(2.6rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.hero-headline em {
+  font-style: italic;
+  color: var(--orange-l);
+}
+.hero-sub {
+  font-size: 1.1rem; color: var(--steel-l); line-height: 1.75;
+  max-width: 480px; margin-bottom: 2.5rem;
+}
+.hero-sub strong { color: var(--white); font-weight: 500; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--orange);
+  color: var(--white);
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600; font-size: 0.95rem;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(232,119,34,0.35);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover {
+  background: var(--orange-l);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(232,119,34,0.45);
+}
+.btn-secondary {
+  background: rgba(255,255,255,0.07);
+  color: var(--white);
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 500; font-size: 0.95rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.hero-stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; color: var(--white); display: block;
+}
+.hero-stat-num span { color: var(--orange); }
+.hero-stat-label { font-size: 0.8rem; color: var(--steel); letter-spacing: 0.03em; }
+
+/* ── Canvas (Knowledge Graph) ─────────────────────────────────────────────── */
+.hero-visual {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  height: 520px;
+}
+canvas#kgraph {
+  width: 100%; height: 100%;
+  border-radius: 16px;
+  opacity: 0.92;
+}
+
+/* ── Trust Bar ───────────────────────────────────────────────────────────── */
+#trust {
+  background: var(--navy);
+  padding: 1.5rem 5%;
+  display: flex; align-items: center; gap: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+.trust-label {
+  color: var(--steel); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  white-space: nowrap; flex-shrink: 0;
+}
+.trust-items {
+  display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+}
+.trust-item {
+  color: var(--steel-l); font-size: 0.85rem; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+}
+.trust-item::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange); flex-shrink: 0;
+}
+
+/* ── Section Shared ──────────────────────────────────────────────────────── */
+section { padding: 6rem 5%; }
+.section-eyebrow {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--orange);
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  line-height: 1.15; color: var(--navy);
+  letter-spacing: -0.02em; margin-bottom: 1.25rem;
+}
+.section-title em { font-style: italic; color: var(--orange); }
+.section-body {
+  font-size: 1.05rem; color: var(--text-l);
+  max-width: 580px; line-height: 1.75;
+}
+.section-header { margin-bottom: 4rem; }
+
+/* ── Problem Section ─────────────────────────────────────────────────────── */
+#problem {
+  background: var(--cream);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+}
+.problem-visual {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+}
+.problem-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--steel-ll);
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.problem-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(27,58,107,0.1); }
+.problem-card:first-child { grid-column: span 2; }
+.problem-card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem; font-size: 1.2rem;
+}
+.problem-card-icon.red   { background: rgba(220,53,69,0.1); }
+.problem-card-icon.amber { background: rgba(255,193,7,0.15); }
+.problem-card-icon.blue  { background: rgba(27,58,107,0.1); }
+.problem-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+.problem-card p  { font-size: 0.82rem; color: var(--text-l); line-height: 1.6; }
+.problem-card .stat {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem; color: var(--navy); line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.problem-card .stat span { color: var(--orange); }
+.tag-red   { display: inline-block; font-size: 0.7rem; font-weight: 700; color: #c0392b; background: rgba(192,57,43,0.1); padding: 3px 8px; border-radius: 4px; margin-bottom: 0.75rem; }
+.tag-amber { display: inline-block; font-size: 0.7rem; font-weight: 700; color: #c07800; background: rgba(255,193,7,0.15); padding: 3px 8px; border-radius: 4px; margin-bottom: 0.75rem; }
+.tag-blue  { display: inline-block; font-size: 0.7rem; font-weight: 700; color: var(--navy); background: rgba(27,58,107,0.1); padding: 3px 8px; border-radius: 4px; margin-bottom: 0.75rem; }
+
+/* ── Solution Section ────────────────────────────────────────────────────── */
+#solution {
+  background: var(--white);
+}
+.solution-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+}
+.sol-card {
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid var(--steel-ll);
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.sol-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(27,58,107,0.1);
+  border-color: var(--orange);
+}
+.sol-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-l));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.sol-card:hover::after { transform: scaleX(1); }
+.sol-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; color: var(--orange); font-weight: 500;
+  letter-spacing: 0.05em; margin-bottom: 1.25rem;
+}
+.sol-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-l));
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.25rem; font-size: 1.4rem;
+}
+.sol-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.75rem; }
+.sol-card p  { font-size: 0.875rem; color: var(--text-l); line-height: 1.7; }
+
+/* ── How It Works ────────────────────────────────────────────────────────── */
+#howitworks {
+  background: var(--navy-d);
+  color: var(--white);
+}
+#howitworks .section-title { color: var(--white); }
+#howitworks .section-body  { color: var(--steel-l); }
+.process-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; margin-top: 4rem;
+  position: relative;
+}
+.process-steps::before {
+  content: '';
+  position: absolute; top: 36px; left: calc(12.5% + 24px); right: calc(12.5% + 24px);
+  height: 1px; background: linear-gradient(90deg, var(--orange), rgba(232,119,34,0.2));
+}
+.step {
+  text-align: center; padding: 0 1rem;
+  position: relative;
+}
+.step-num {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--orange);
+  background: var(--navy-d);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem; color: var(--orange);
+  position: relative; z-index: 2;
+  transition: background 0.3s, transform 0.2s;
+}
+.step:hover .step-num {
+  background: var(--orange); color: var(--white);
+  transform: scale(1.1);
+}
+.step h4 { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.6rem; }
+.step p  { font-size: 0.82rem; color: var(--steel); line-height: 1.65; }
+
+/* ── Verticals ───────────────────────────────────────────────────────────── */
+#verticals { background: var(--cream); }
+.verticals-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem;
+}
+.vertical-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  border: 1px solid var(--steel-ll);
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative; overflow: hidden;
+}
+.vertical-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--orange); transform: scaleX(0);
+  transition: transform 0.3s; transform-origin: center;
+}
+.vertical-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(27,58,107,0.1); border-color: var(--orange); }
+.vertical-card:hover::before { transform: scaleX(1); }
+.vertical-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+.vertical-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+.vertical-card p  { font-size: 0.78rem; color: var(--text-l); line-height: 1.6; }
+
+/* ── Differentiation (vs competitors) ───────────────────────────────────── */
+#vs {
+  background: var(--white);
+}
+.vs-table-wrap { overflow-x: auto; margin-top: 3rem; }
+.vs-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.vs-table th {
+  padding: 0.875rem 1.25rem;
+  text-align: left; font-weight: 700;
+  font-size: 0.8rem; letter-spacing: 0.04em;
+  background: var(--navy); color: var(--white);
+}
+.vs-table th:first-child { border-radius: 10px 0 0 0; }
+.vs-table th:last-child  { border-radius: 0 10px 0 0; text-align: center; }
+.vs-table th.highlight   { background: var(--orange); }
+.vs-table td {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--steel-ll);
+  color: var(--text);
+}
+.vs-table tr:last-child td { border-bottom: none; }
+.vs-table tr:nth-child(even) td { background: var(--cream); }
+.vs-table td:last-child { text-align: center; font-weight: 700; }
+.vs-table td.highlight { background: rgba(232,119,34,0.05); }
+.check  { color: #1E7B34; font-size: 1.1rem; }
+.cross  { color: #C0392B; font-size: 1.1rem; }
+.partial { color: #E87722; font-size: 1rem; }
+
+/* ── Revenue Model ───────────────────────────────────────────────────────── */
+#revenue {
+  background: var(--navy);
+  color: var(--white);
+}
+#revenue .section-title { color: var(--white); }
+#revenue .section-body  { color: var(--steel-l); }
+.revenue-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem;
+}
+.rev-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 2rem;
+  position: relative; overflow: hidden;
+  transition: background 0.3s, border-color 0.3s, transform 0.2s;
+}
+.rev-card:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(232,119,34,0.5);
+  transform: translateY(-3px);
+}
+.rev-phase {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; color: var(--orange); letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 1rem;
+}
+.rev-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--white); margin-bottom: 0.75rem; }
+.rev-card p  { font-size: 0.85rem; color: var(--steel-l); line-height: 1.7; }
+.rev-tag {
+  display: inline-block; margin-top: 1.25rem;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 4px;
+  background: rgba(232,119,34,0.2); color: var(--orange-l);
+}
+
+/* ── Why Us ──────────────────────────────────────────────────────────────── */
+#why { background: var(--cream); }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+.why-features { display: flex; flex-direction: column; gap: 1.75rem; }
+.why-feature {
+  display: flex; gap: 1.25rem; align-items: flex-start;
+  padding: 1.5rem;
+  background: var(--white); border-radius: 12px;
+  border: 1px solid var(--steel-ll);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.why-feature:hover { transform: translateX(4px); box-shadow: 0 8px 30px rgba(27,58,107,0.08); }
+.why-feature-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--orange-l));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+.why-feature-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
+.why-feature-text p  { font-size: 0.83rem; color: var(--text-l); line-height: 1.65; }
+.why-quote-block {
+  background: var(--navy-d);
+  border-radius: 20px; padding: 3rem;
+  position: relative; overflow: hidden;
+}
+.why-quote-block::before {
+  content: '"';
+  position: absolute; top: -1rem; left: 1.5rem;
+  font-family: 'DM Serif Display', serif;
+  font-size: 10rem; color: rgba(232,119,34,0.12);
+  line-height: 1; pointer-events: none;
+}
+.why-quote {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; font-style: italic;
+  color: var(--white); line-height: 1.5;
+  margin-bottom: 2rem; position: relative; z-index: 1;
+}
+.why-quote em { color: var(--orange-l); font-style: normal; }
+.why-metrics {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; position: relative; z-index: 1;
+}
+.why-metric {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 1.25rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.why-metric-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.8rem; color: var(--orange); display: block; line-height: 1;
+}
+.why-metric-label { font-size: 0.75rem; color: var(--steel-l); margin-top: 0.25rem; }
+
+/* ── CTA ─────────────────────────────────────────────────────────────────── */
+#cta {
+  background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 50%, var(--navy-l) 100%);
+  text-align: center; padding: 8rem 5%;
+  position: relative; overflow: hidden;
+}
+#cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(232,119,34,0.12) 0%, transparent 60%);
+}
+.cta-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+.cta-eyebrow {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 1.25rem;
+}
+.cta-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--white); line-height: 1.15; margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+.cta-title em { font-style: italic; color: var(--orange-l); }
+.cta-body {
+  font-size: 1.05rem; color: var(--steel-l); margin-bottom: 3rem; line-height: 1.7;
+}
+.cta-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.cta-contact {
+  margin-top: 2.5rem;
+  font-size: 0.875rem; color: var(--steel);
+}
+.cta-contact a { color: var(--orange-l); font-weight: 500; }
+.cta-contact a:hover { text-decoration: underline; }
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer {
+  background: var(--charcoal);
+  padding: 3rem 5%;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+}
+.footer-logo { color: var(--white); font-weight: 700; font-size: 1.1rem; }
+.footer-logo span { color: var(--orange); }
+.footer-tagline { font-size: 0.8rem; color: var(--steel); margin-top: 0.25rem; font-style: italic; }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a { color: var(--steel); font-size: 0.82rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 0.78rem; color: var(--steel); }
+
+/* ── Scroll animations ───────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  #hero { grid-template-columns: 1fr; padding-top: 120px; padding-bottom: 4rem; }
+  .hero-visual { height: 340px; }
+  #problem { grid-template-columns: 1fr; }
+  .solution-grid { grid-template-columns: 1fr 1fr; }
+  .verticals-grid { grid-template-columns: repeat(3, 1fr); }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .process-steps::before { display: none; }
+  .revenue-cards { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0 4%; }
+  .nav-links { display: none; }
+  section { padding: 4rem 4%; }
+  .solution-grid { grid-template-columns: 1fr; }
+  .verticals-grid { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+  .problem-visual { grid-template-columns: 1fr; }
+  .problem-card:first-child { grid-column: span 1; }
+  .why-metrics { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="3" fill="white"/>
+        <circle cx="3"  cy="4"  r="2" fill="white" opacity="0.7"/>
+        <circle cx="17" cy="4"  r="2" fill="white" opacity="0.7"/>
+        <circle cx="3"  cy="16" r="2" fill="white" opacity="0.7"/>
+        <circle cx="17" cy="16" r="2" fill="white" opacity="0.7"/>
+        <line x1="10" y1="10" x2="3"  y2="4"  stroke="white" stroke-width="1" opacity="0.5"/>
+        <line x1="10" y1="10" x2="17" y2="4"  stroke="white" stroke-width="1" opacity="0.5"/>
+        <line x1="10" y1="10" x2="3"  y2="16" stroke="white" stroke-width="1" opacity="0.5"/>
+        <line x1="10" y1="10" x2="17" y2="16" stroke="white" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">Formiga<span>.ai</span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#verticals">Verticals</a></li>
+    <li><a href="#vs">vs. Alternatives</a></li>
+    <li><a href="#revenue">Pricing</a></li>
+    <li><a href="#cta" class="nav-cta">Request Demo</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Formulation Intelligence System</div>
+    <h1 class="hero-headline serif">
+      Knowledge that<br><em>compounds.</em><br>
+      On your servers.
+    </h1>
+    <p class="hero-sub">
+      Your best formulation scientist's expertise — <strong>encoded, structured, and permanently accessible</strong> — even after they retire. A local AI brain built for pharma, food, cosmetics, and specialty chemical R&D.
+    </p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l7 7-7 7M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Request a Demo
+      </a>
+      <a href="#solution" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        How it works
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-num">2<span>+</span></span>
+        <span class="hero-stat-label">Live Deployments</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">5</span>
+        <span class="hero-stat-label">Target Verticals</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">100<span>%</span></span>
+        <span class="hero-stat-label">On-Premise. Your Data.</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <canvas id="kgraph"></canvas>
+  </div>
+</section>
+
+<!-- ── TRUST BAR ──────────────────────────────────────────────────────── -->
+<div id="trust">
+  <span class="trust-label">Deployed in</span>
+  <div class="trust-items">
+    <span class="trust-item">Chemical R&amp;D Departments</span>
+    <span class="trust-item">Food Formulation Labs</span>
+    <span class="trust-item">University Incubator Member</span>
+    <span class="trust-item">ICH Q10 Aligned Architecture</span>
+    <span class="trust-item">GMP Export Ready</span>
+  </div>
+</div>
+
+<!-- ── PROBLEM ────────────────────────────────────────────────────────── -->
+<section id="problem">
+  <div>
+    <p class="section-eyebrow">The Problem</p>
+    <h2 class="section-title serif">Your formulation IP<br>is leaving with <em>your people.</em></h2>
+    <p class="section-body">
+      Every formulation decision, every failed batch, every optimized excipient combination — it lives in your scientists' heads. When they leave, so does decades of irreplaceable knowledge. Generic tools store files. We encode intelligence.
+    </p>
+  </div>
+  <div class="problem-visual">
+    <div class="problem-card reveal">
+      <div class="tag-red">Knowledge Loss Risk</div>
+      <div class="stat">73<span>%</span></div>
+      <h4>of formulation knowledge is undocumented</h4>
+      <p>Tacit expertise in excipient selection, process parameters, and failure patterns exists only in senior scientists' memory — not in any system.</p>
+    </div>
+    <div class="problem-card reveal reveal-delay-1">
+      <div class="problem-card-icon amber">⚠️</div>
+      <h4>Staff Turnover Crisis</h4>
+      <p>A retiring formulation lead takes 15-25 years of institutional knowledge — no ERP, LIMS, or ELN captures the reasoning behind decisions.</p>
+    </div>
+    <div class="problem-card reveal reveal-delay-2">
+      <div class="problem-card-icon blue">🔒</div>
+      <h4>Data Sovereignty</h4>
+      <p>Your formulation IP cannot live on a vendor's cloud server. Regulatory audits, IP protection, and competitive risk demand local deployment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOLUTION ───────────────────────────────────────────────────────── -->
+<section id="solution">
+  <div class="section-header">
+    <p class="section-eyebrow">The Solution</p>
+    <h2 class="section-title serif">An AI brain that<br>thinks in <em>formulations.</em></h2>
+    <p class="section-body">
+      Not a document manager. Not a generic chatbot. A domain-specific intelligence layer built on your organization's ontology — encoding the relationships between materials, methods, results, and decisions.
+    </p>
+  </div>
+  <div class="solution-grid">
+    <div class="sol-card reveal">
+      <div class="sol-num">01 / FOUNDATION</div>
+      <div class="sol-icon">🧠</div>
+      <h3>Domain Ontology Engineering</h3>
+      <p>We build a custom knowledge graph that maps your formulation domain — raw materials, excipients, process parameters, quality attributes, and their scientific relationships. This is the intelligence layer no generic AI has.</p>
+    </div>
+    <div class="sol-card reveal reveal-delay-1">
+      <div class="sol-num">02 / RETRIEVAL</div>
+      <div class="sol-icon">🔍</div>
+      <h3>AI Chatbot — Formulation RAG</h3>
+      <p>Ask "which surfactant system did we use for emulsion stability in batch 2022-Q3?" and get a precise, sourced answer — from your own lab reports, formulation histories, and engineer notes. Not a generic search.</p>
+    </div>
+    <div class="sol-card reveal reveal-delay-2">
+      <div class="sol-num">03 / CAPTURE</div>
+      <div class="sol-icon">📋</div>
+      <h3>Formulation Builder & Lab Integration</h3>
+      <p>Structured capture of raw materials, products, formulation recipes, PDF lab results, and engineer reports — with version control, traceability codes, and cross-linked relationships between every entity.</p>
+    </div>
+    <div class="sol-card reveal reveal-delay-1">
+      <div class="sol-num">04 / GOVERNANCE</div>
+      <div class="sol-icon">🛡️</div>
+      <h3>Access Control & IP Protection</h3>
+      <p>Granular user-level access permissions. Senior scientists see everything; junior staff see what they need. All data stays on your local servers — no cloud dependency, no third-party exposure.</p>
+    </div>
+    <div class="sol-card reveal reveal-delay-2">
+      <div class="sol-num">05 / OVERSIGHT</div>
+      <div class="sol-icon">📊</div>
+      <h3>Manager Intelligence Dashboard</h3>
+      <p>KPI tracking, OKR monitoring, formula lifecycle visibility, workflow approvals, and HR maturity insights from AI interaction patterns — giving leadership a real-time view of knowledge activity.</p>
+    </div>
+    <div class="sol-card reveal reveal-delay-3">
+      <div class="sol-num">06 / EXPANSION</div>
+      <div class="sol-icon">🔬</div>
+      <h3>Cross-Sell Intelligence Modules</h3>
+      <p>Patent & IP analyzer, competitive intelligence radar, and failure analysis engine — add-on modules that convert your accumulated formulation data into strategic insight for R&D leadership.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ────────────────────────────────────────────────────── -->
+<section id="howitworks">
+  <div class="section-header">
+    <p class="section-eyebrow">Deployment Process</p>
+    <h2 class="section-title serif">From contract to<br>working system in <em>90 days.</em></h2>
+    <p class="section-body">A structured, phased engagement that minimizes disruption and delivers measurable value within one quarter.</p>
+  </div>
+  <div class="process-steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h4>Ontology Sprint</h4>
+      <p>We map your formulation domain — materials, methods, relationships, and decision logic — into a structured knowledge architecture unique to your organization.</p>
+    </div>
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">2</div>
+      <h4>Data Ingestion</h4>
+      <p>Existing lab reports, formulation histories, engineer notes, and documents are structured and encoded into your knowledge graph on your local servers.</p>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">3</div>
+      <h4>AI Deployment</h4>
+      <p>The RAG chatbot, access control system, and manager dashboard go live — fully configured for your team structure and formulation workflows.</p>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">4</div>
+      <h4>Ongoing Compounding</h4>
+      <p>Every new formulation decision, lab result, and engineer note adds to the brain. The system grows more valuable every month — building switching costs that protect your investment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── VERTICALS ──────────────────────────────────────────────────────── -->
+<section id="verticals">
+  <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto 4rem;">
+    <p class="section-eyebrow">Industry Focus</p>
+    <h2 class="section-title serif">Built for<br><em>formulation science.</em></h2>
+    <p class="section-body" style="margin:0 auto;">Phase 1 scope: process manufacturers where formulation design is the core competitive asset.</p>
+  </div>
+  <div class="verticals-grid">
+    <div class="vertical-card reveal">
+      <div class="vertical-icon">💊</div>
+      <h4>Pharmaceuticals & Biologics</h4>
+      <p>Drug delivery optimization, excipient selection, injectable and oral formulation — with GMP and ICH Q10 compliance readiness.</p>
+    </div>
+    <div class="vertical-card reveal reveal-delay-1">
+      <div class="vertical-icon">🍽️</div>
+      <h4>Food & Beverage</h4>
+      <p>Taste, texture, and shelf-life optimization. Rapid formula development with full traceability from ingredient to finished product.</p>
+    </div>
+    <div class="vertical-card reveal reveal-delay-2">
+      <div class="vertical-icon">✨</div>
+      <h4>Cosmetics & Personal Care</h4>
+      <p>Molecular delivery formulation, stability engineering, and consumer-property optimization with full version control.</p>
+    </div>
+    <div class="vertical-card reveal reveal-delay-3">
+      <div class="vertical-icon">⚗️</div>
+      <h4>Specialty Chemicals</h4>
+      <p>Paints, coatings, catalysts, detergents — complex surfactant systems and microstructure-controlled performance formulations.</p>
+    </div>
+    <div class="vertical-card reveal reveal-delay-4">
+      <div class="vertical-icon">🔬</div>
+      <h4>Research Hubs</h4>
+      <p>Genetic labs, agriculture research, and academic R&D centers where institutional knowledge and formulation IP must be preserved across project cycles.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── VS COMPETITORS ─────────────────────────────────────────────────── -->
+<section id="vs">
+  <div class="section-header">
+    <p class="section-eyebrow">Competitive Position</p>
+    <h2 class="section-title serif">Not a KMS.<br>Not a LIMS.<br><em>Something new.</em></h2>
+    <p class="section-body">We occupy an uncontested position: local AI, formulation-specific, ontology-deep. No Iranian or global vendor holds all three simultaneously for your vertical.</p>
+  </div>
+  <div class="vs-table-wrap reveal">
+    <table class="vs-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Generic KMS<br><small style="font-weight:400;opacity:0.7">(Pendaar, Raiwan, MTAShare)</small></th>
+          <th>Generic AI KMS<br><small style="font-weight:400;opacity:0.7">(Porsit)</small></th>
+          <th>LIMS / ELN<br><small style="font-weight:400;opacity:0.7">(Benchling, LabWare)</small></th>
+          <th class="highlight">Formiga</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AI Intelligence Layer</strong></td>
+          <td><span class="cross">✗</span> None</td>
+          <td><span class="check">✓</span> Generic RAG</td>
+          <td><span class="cross">✗</span> None</td>
+          <td class="highlight"><span class="check">✓</span> Domain-trained</td>
+        </tr>
+        <tr>
+          <td><strong>Formulation Domain Ontology</strong></td>
+          <td><span class="cross">✗</span> Not built</td>
+          <td><span class="cross">✗</span> Not built</td>
+          <td><span class="partial">~</span> Data only</td>
+          <td class="highlight"><span class="check">✓</span> Custom per client</td>
+        </tr>
+        <tr>
+          <td><strong>Local / On-Premise Deployment</strong></td>
+          <td><span class="partial">~</span> Some (no AI)</td>
+          <td><span class="cross">✗</span> Cloud only</td>
+          <td><span class="cross">✗</span> Cloud only</td>
+          <td class="highlight"><span class="check">✓</span> Always local</td>
+        </tr>
+        <tr>
+          <td><strong>Material–Method–Result Linking</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">~</span> Partial</td>
+          <td class="highlight"><span class="check">✓</span> Core architecture</td>
+        </tr>
+        <tr>
+          <td><strong>GMP / ICH Q10 Compliance Ready</strong></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">~</span> Partial</td>
+          <td class="highlight"><span class="check">✓</span> Roadmap Q1</td>
+        </tr>
+        <tr>
+          <td><strong>Token-Based Scalable Pricing</strong></td>
+          <td><span class="cross">✗</span> License only</td>
+          <td><span class="cross">✗</span> Per seat</td>
+          <td><span class="cross">✗</span> Per seat</td>
+          <td class="highlight"><span class="check">✓</span> Usage-aligned</td>
+        </tr>
+        <tr>
+          <td><strong>Farsi / Local Language Support</strong></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+          <td class="highlight"><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── REVENUE / PRICING ───────────────────────────────────────────────── -->
+<section id="revenue">
+  <div class="section-header">
+    <p class="section-eyebrow">Pricing Model</p>
+    <h2 class="section-title serif">Aligned with<br>your <em>adoption depth.</em></h2>
+    <p class="section-body">A Razor & Blade model designed to minimize your entry risk and scale our revenue with your usage — the more embedded we are, the more value flows both ways.</p>
+  </div>
+  <div class="revenue-cards">
+    <div class="rev-card reveal">
+      <div class="rev-phase">Phase 1 — Entry</div>
+      <h3>Ontology & Architecture Fee</h3>
+      <p>One-time investment covering domain ontology development, knowledge graph architecture, system deployment, and initial data ingestion. Your organization owns 100% of the resulting software and IP.</p>
+      <span class="rev-tag">ONE-TIME · LOW ENTRY</span>
+    </div>
+    <div class="rev-card reveal reveal-delay-1">
+      <div class="rev-phase">Phase 2 — Growth</div>
+      <h3>Token-Based AI Usage</h3>
+      <p>Pay only for what your team uses. Every AI query, formulation retrieval, and intelligent search draws from a token pool — scaling naturally with team size and adoption depth. No flat seat license risk.</p>
+      <span class="rev-tag">RECURRING · USAGE-ALIGNED</span>
+    </div>
+    <div class="rev-card reveal reveal-delay-2">
+      <div class="rev-phase">Phase 3 — Retention</div>
+      <h3>Maintenance & Cross-Sell</h3>
+      <p>Year 2+ maintenance contracts plus optional intelligence modules: Patent & IP Analyzer, Competitive Intelligence Radar, Failure Analysis Engine — each adding a new layer of value to your accumulated knowledge base.</p>
+      <span class="rev-tag">ANNUAL CONTRACT · MODULAR</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY US ──────────────────────────────────────────────────────────── -->
+<section id="why">
+  <div class="why-grid">
+    <div>
+      <p class="section-eyebrow">Why Formiga</p>
+      <h2 class="section-title serif">The case for<br><em>formulation intelligence.</em></h2>
+      <div class="why-features">
+        <div class="why-feature reveal">
+          <div class="why-feature-icon">🔒</div>
+          <div class="why-feature-text">
+            <h4>Privacy by Architecture</h4>
+            <p>Your formulation IP never leaves your servers. Full local deployment means no cloud vendor access, no data sovereignty risk, and no audit exposure.</p>
+          </div>
+        </div>
+        <div class="why-feature reveal reveal-delay-1">
+          <div class="why-feature-icon">🧬</div>
+          <div class="why-feature-text">
+            <h4>Domain Science, Not Generic AI</h4>
+            <p>Generic AI tools answer generic questions. We encode formulation science — material relationships, failure patterns, process logic — into a reasoning layer that understands your domain.</p>
+          </div>
+        </div>
+        <div class="why-feature reveal reveal-delay-2">
+          <div class="why-feature-icon">📈</div>
+          <div class="why-feature-text">
+            <h4>Knowledge That Compounds</h4>
+            <p>Every new formulation, lab result, and decision adds to the organizational brain. The system becomes exponentially more valuable over time — and switching away becomes operationally unthinkable.</p>
+          </div>
+        </div>
+        <div class="why-feature reveal reveal-delay-3">
+          <div class="why-feature-icon">✅</div>
+          <div class="why-feature-text">
+            <h4>Deployed & Operational Today</h4>
+            <p>Not a pilot. Not a proof of concept. We have live, production deployments in a chemical R&D department and a food formulation lab — with purchase orders and active usage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="why-quote-block">
+        <p class="why-quote serif">
+          "We don't install software —<br>we encode <em>how your R&D team thinks.</em>"
+        </p>
+        <div class="why-metrics">
+          <div class="why-metric">
+            <span class="why-metric-num">15.77%</span>
+            <span class="why-metric-label">CAGR — Pharma KMS Market 2024–2035</span>
+          </div>
+          <div class="why-metric">
+            <span class="why-metric-num">$10.5B</span>
+            <span class="why-metric-label">Projected pharma KMS market by 2035</span>
+          </div>
+          <div class="why-metric">
+            <span class="why-metric-num">Zero</span>
+            <span class="why-metric-label">Iranian competitors with local AI + formulation ontology</span>
+          </div>
+          <div class="why-metric">
+            <span class="why-metric-num">ICH Q10</span>
+            <span class="why-metric-label">GMP-aligned architecture for export-ready pharma</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────── -->
+<section id="cta">
+  <div class="cta-inner">
+    <p class="cta-eyebrow">Get Started</p>
+    <h2 class="cta-title serif">What happens when your<br>best scientist <em>retires?</em></h2>
+    <p class="cta-body">Your formulation IP walks out with them — unless it's already encoded. Book a 30-minute session to see a live deployment and discuss your organization's knowledge architecture.</p>
+    <div class="cta-actions">
+      <a href="mailto:hello@formiga.ai" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4l6 5 6-5M2 4h12v9H2V4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Request a Demo
+      </a>
+      <a href="#solution" class="btn-secondary">Explore the System</a>
+    </div>
+    <p class="cta-contact">Or reach us directly: <a href="mailto:hello@formiga.ai">hello@formiga.ai</a></p>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div>
+    <div class="footer-logo">Formiga<span>.ai</span></div>
+    <div class="footer-tagline">Knowledge that compounds. On your servers.</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#verticals">Verticals</a></li>
+    <li><a href="#vs">vs. Alternatives</a></li>
+    <li><a href="#cta">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Formiga. All rights reserved. Local. Secure. Yours.</div>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────────────────── -->
+<script>
+// ── Knowledge Graph Animation ────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('kgraph');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, edges, frame;
+
+  const NAVY   = '#1B3A6B';
+  const NAVIG  = '#2A4F8A';
+  const ORANGE = '#E87722';
+  const ORANGEL = '#F59340';
+  const WHITE  = '#FFFFFF';
+  const STEEL  = '#8A9BB0';
+
+  const NODE_LABELS = [
+    'Excipient','Batch 2022','Surfactant','Stability','Emulsion',
+    'Viscosity','API','pH Level','Temperature','Yield',
+    'Formula v3','Lab Result','Process','R&D Note','Quality',
+  ];
+
+  function resize(){
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = canvas.width  = rect.width  * devicePixelRatio;
+    H = canvas.height = rect.height * devicePixelRatio;
+    canvas.style.width  = rect.width  + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    init();
+  }
+
+  function init(){
+    const rw = W / devicePixelRatio;
+    const rh = H / devicePixelRatio;
+    nodes = NODE_LABELS.map((label, i) => {
+      const isCenter = i === 0;
+      return {
+        x: isCenter ? rw/2 : Math.random() * rw * 0.8 + rw * 0.1,
+        y: isCenter ? rh/2 : Math.random() * rh * 0.8 + rh * 0.1,
+        vx: (Math.random()-0.5)*0.3,
+        vy: (Math.random()-0.5)*0.3,
+        r: isCenter ? 22 : 10 + Math.random()*10,
+        label,
+        primary: isCenter,
+        alpha: 0,
+        targetAlpha: 0.95,
+        color: isCenter ? ORANGE : (Math.random() > 0.6 ? ORANGEL : NAVIG),
+        pulse: Math.random()*Math.PI*2,
+      };
+    });
+    edges = [];
+    for(let i=1; i<nodes.length; i++){
+      if(Math.random()>0.3) edges.push([0,i]);
+      if(i>1 && Math.random()>0.5){
+        const j = 1+Math.floor(Math.random()*(i-1));
+        edges.push([j,i]);
+      }
+    }
+  }
+
+  function draw(){
+    const rw = W / devicePixelRatio;
+    const rh = H / devicePixelRatio;
+    ctx.clearRect(0, 0, rw, rh);
+
+    // Background
+    const bg = ctx.createLinearGradient(0,0,rw,rh);
+    bg.addColorStop(0, '#0D1E3C');
+    bg.addColorStop(1, '#1B3A6B');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, rw, rh);
+
+    // Grid dots
+    ctx.fillStyle = 'rgba(138,155,176,0.15)';
+    for(let x=20; x<rw; x+=40){
+      for(let y=20; y<rh; y+=40){
+        ctx.beginPath(); ctx.arc(x,y,1,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    const t = Date.now()/1000;
+
+    // Edges
+    edges.forEach(([a,b])=>{
+      const na=nodes[a], nb=nodes[b];
+      const alpha=Math.min(na.alpha, nb.alpha)*0.35;
+      const grad = ctx.createLinearGradient(na.x,na.y,nb.x,nb.y);
+      grad.addColorStop(0, `rgba(232,119,34,${alpha})`);
+      grad.addColorStop(1, `rgba(42,79,138,${alpha})`);
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Travelling particle
+      const sp = (t*0.4 + a*0.3 + b*0.2) % 1;
+      const px = na.x + (nb.x-na.x)*sp;
+      const py = na.y + (nb.y-na.y)*sp;
+      ctx.beginPath(); ctx.arc(px,py,2,0,Math.PI*2);
+      ctx.fillStyle = `rgba(232,119,34,${alpha*2})`;
+      ctx.fill();
+    });
+
+    // Nodes
+    nodes.forEach(n=>{
+      n.alpha += (n.targetAlpha - n.alpha)*0.03;
+      n.pulse += 0.02;
+
+      // Outer glow
+      const glow = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
+      glow.addColorStop(0, n.primary ? `rgba(232,119,34,${n.alpha*0.25})` : `rgba(42,79,138,${n.alpha*0.15})`);
+      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);
+      ctx.fillStyle = glow; ctx.fill();
+
+      // Pulse ring for primary
+      if(n.primary){
+        const pAlpha = (Math.sin(n.pulse)*0.5+0.5)*0.4;
+        ctx.beginPath(); ctx.arc(n.x,n.y, n.r+8+Math.sin(n.pulse)*4, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(232,119,34,${pAlpha})`;
+        ctx.lineWidth = 1.5; ctx.stroke();
+      }
+
+      // Node circle
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      const fill = ctx.createRadialGradient(n.x-n.r*0.3,n.y-n.r*0.3,0,n.x,n.y,n.r);
+      fill.addColorStop(0, n.primary ? '#F59340' : (n.color==='#F59340'?'#FFFFFF':'#2A4F8A'));
+      fill.addColorStop(1, n.primary ? ORANGE : n.color);
+      ctx.fillStyle = fill;
+      ctx.globalAlpha = n.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = n.primary ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = n.primary ? 2 : 1;
+      ctx.stroke();
+
+      // Label
+      if(n.r > 12){
+        ctx.font = `${n.primary?'600 11px':'500 9px'} Inter, sans-serif`;
+        ctx.fillStyle = `rgba(255,255,255,${n.alpha*0.85})`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        if(n.primary){
+          ctx.fillText(n.label, n.x, n.y);
+        } else {
+          ctx.fillText(n.label, n.x, n.y+n.r+10);
+        }
+      }
+    });
+
+    // Physics
+    const rw2 = rw, rh2 = rh;
+    nodes.forEach(n=>{
+      // Repulsion
+      nodes.forEach(m=>{
+        if(m===n) return;
+        const dx=n.x-m.x, dy=n.y-m.y;
+        const dist=Math.sqrt(dx*dx+dy*dy)||1;
+        const force=200/(dist*dist);
+        n.vx+=dx/dist*force*0.1;
+        n.vy+=dy/dist*force*0.1;
+      });
+      // Attract center node
+      if(!n.primary){
+        const dx=rw2/2-n.x, dy=rh2/2-n.y;
+        n.vx+=dx*0.0008; n.vy+=dy*0.0008;
+      }
+      // Dampen
+      n.vx*=0.95; n.vy*=0.95;
+      n.x+=n.vx; n.y+=n.vy;
+      // Bounds
+      const pad=n.r+10;
+      if(n.x<pad){n.x=pad;n.vx*=-0.5;}
+      if(n.x>rw2-pad){n.x=rw2-pad;n.vx*=-0.5;}
+      if(n.y<pad){n.y=pad;n.vy*=-0.5;}
+      if(n.y>rh2-pad){n.y=rh2-pad;n.vy*=-0.5;}
+    });
+
+    frame = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', ()=>{ cancelAnimationFrame(frame); resize(); });
+  resize(); draw();
+})();
+
+// ── Scroll Reveal ─────────────────────────────────────────────────────────
+(function(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+
+// ── Nav shadow on scroll ───────────────────────────────────────────────────
+window.addEventListener('scroll', ()=>{
+  document.querySelector('nav').style.boxShadow =
+    window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.3)' : '';
+});
+</script>
+</body>
+</html>
